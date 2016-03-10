@@ -1,0 +1,22 @@
+{
+  "name": "publicidadserver",
+  "version": "1.0.0",
+  "description": "servidor de publicidades",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NicolasPresta/publicidadServer.git"
+  },
+  "keywords": [
+    "publicidad"
+  ],
+  "author": "NMR",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NicolasPresta/publicidadServer/issues"
+  },
+  "homepage": "https://github.com/NicolasPresta/publicidadServer#readme"
+}
