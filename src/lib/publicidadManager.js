@@ -1,11 +1,11 @@
 // Este manager tiene que hacer las consultas a la base de datos para obtener las publicidades
 
-var dummy = 
+var dummy = { publicidades:
 
 	[	
 		{	
 			titulo:"Una super oferta",
-			descripcion:"tv 42 pulgadas a solo $10000",
+			descripcion:"TV 42 pulgadas a solo $10000",
 			img: "http://production-alkosto-data.s3-website-us-east-1.amazonaws.com/media/catalog/product/cache/6/image/69ace863370f34bdf190e4e164b6e123/t/v/tv-42-led-lg-42ln5700-fhd-int-5.jpg",
 			vigenciaDesde: "09/03/2016",
 			vigenciaHasta: "30/03/2016",
@@ -20,6 +20,7 @@ var dummy =
 			condiciones: "no incluye los sillones"
 		}
 	]
+}
 
 var publicidadManager = {
 
