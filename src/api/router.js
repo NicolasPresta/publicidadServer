@@ -12,13 +12,30 @@ const router = express.Router();
 // Envia todas las publicidades
 router.get('/publicidades', (req, res) => {
 
-  log.debug("nuevo request " + req)
+  log.debug("nuevo request de /publicidades " + req)
   publicidadManager.getAll((err, publicidades) => {
     if (err) {
       return res.sendStatus(500).json(err)
     }
 
      res.json(publicidades)
+
+  })
+
+});
+
+router.get('/publicidad/:id', (req, res) => {
+
+  log.debug("nuevo request de /publicidad " + req)
+  
+  let id = req.params.id
+
+  publicidadManager.getById(id, (err, publicidad) => {
+    if (err) {
+      return res.sendStatus(500).json(err)
+    }
+
+     res.json(publicidad)
 
   })
 
