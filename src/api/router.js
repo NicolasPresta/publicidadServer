@@ -10,9 +10,14 @@ const router = express.Router();
 // Puntos de entrada REST
 
 // Envia todas las publicidades
-router.get('/publicidades', (req, res) => {
-
+router.get('/publicidades/:uuid', (req, res) => {
+	
   log.debug("nuevo request de /publicidades " + req)
+
+  let uuid = req.params.uuid
+
+  log.debug("desde acá se hizo el request UUID: " + uuid)
+
   publicidadManager.getAll((err, publicidades) => {
     if (err) {
       return res.sendStatus(500).json(err)
@@ -24,11 +29,14 @@ router.get('/publicidades', (req, res) => {
 
 });
 
-router.get('/publicidad/:id', (req, res) => {
+router.get('/publicidad/:uuid/:id', (req, res) => {
 
   log.debug("nuevo request de /publicidad " + req)
-  
+
   let id = req.params.id
+  let uuid = req.params.uuid
+
+  log.debug("desde acá se hizo el request UUID: " + uuid)
 
   publicidadManager.getById(id, (err, publicidad) => {
     if (err) {
