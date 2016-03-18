@@ -18,7 +18,7 @@ app.use(bodyParser.json())
 // Puntos de entrada REST
 app.use(router)
 
-// Permite servir los archivos estaticos de la carpeta /Cliente (necesario para levantar los clientes y cajas dummys)
+// Permite servir los archivos estaticos de la carpeta /public
 app.use(express.static('public'))
 
 // Nos ponemos a escuchar... hello! 
