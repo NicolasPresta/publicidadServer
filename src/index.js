@@ -14,6 +14,9 @@ const log = new Log(appConfig.LogLevel)
 
 // Middlewares
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+})); 
 
 // Puntos de entrada REST
 app.use(router)

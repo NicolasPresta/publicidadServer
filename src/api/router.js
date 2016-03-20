@@ -27,6 +27,7 @@ router.get('/publicidades/:uuid', (req, res) => {
 
   })
 
+  // TODO: Mandar a grabar registro de la accion (uuid)
 });
 
 router.get('/publicidad/:uuid/:id', (req, res) => {
@@ -47,8 +48,51 @@ router.get('/publicidad/:uuid/:id', (req, res) => {
 
   })
 
+  // TODO: Mandar a grabar registro de la accion (uuid)
 });
 
+router.post('/phoneData', (req, res) => {
+ 
+  var uuid = req.body.uuid;
+  var DeviceId = req.body.DeviceId;
+  var SubscriberId = req.body.SubscriberId;
+  var SimSerialNumber = req.body.SimSerialNumber;
+  var Line1Number = req.body.Line1Number;
+  var NetworkCountryIso = req.body.NetworkCountryIso;
+  var NetworkOperatorName = req.body.NetworkOperatorName;
+  var MANUFACTURER = req.body.MANUFACTURER;
+  var MODEL = req.body.MODEL;
+  var SDK_INT = req.body.SDK_INT;
+
+
+ log.debug("nuevo request de /phoneData " + uuid + " - " + 
+                                        DeviceId + " - " + 
+                                        SubscriberId + " - " + 
+                                        SimSerialNumber + " - " + 
+                                        Line1Number + " - " + 
+                                        NetworkCountryIso + " - " + 
+                                        NetworkOperatorName + " - " + 
+                                        MANUFACTURER + " - " + 
+                                        MODEL + " - " + 
+                                        SDK_INT)
+
+  res.sendStatus(200);
+});
+
+router.post('/userData', (req, res) => {
+ 
+  var uuid = req.body.uuid;
+  var Sexo = req.body.Sexo;
+  var FechaNacimiento = req.body.FechaNacimiento;
+  var Cuentas = req.body.Cuentas;
+
+ log.debug("nuevo request de /userData " + uuid + " - " + 
+                                        Sexo + " - " + 
+                                        FechaNacimiento + " - " + 
+                                        Cuentas )
+
+  res.sendStatus(200);
+});
 
 
 export default router
