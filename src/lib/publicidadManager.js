@@ -10,7 +10,7 @@ var dummy = { publicidades:
 			img: "http://cdn.arstechnica.net/wp-content/uploads/2012/09/steambigpic.png",
 			vigenciaDesde: "09/03/2016",
 			vigenciaHasta: "30/03/2016",
-			condiciones: "Condiciones: solo si tenes familia en la antartida, previa comprobacion del parentesco familiar"
+			condiciones: "Condiciones: solo si tenes familia en la antartida, previa comprobacion del parentesco familiar aca voy a poner un texto absurdamente largo soo para verificar que se envie bien los datos y lueg los pueda leeer pq sino es una cagada, tengo que escribir mucho mucho para que aparesca mucho mucho texto en el celular y ver que pasa, si el scroll funciona o no.  Ojala que funcione, dios quiera que funcione, sino es una cagada.  espero que todo este texto sirva, sino voy a tener que vlver para  escribir mas :("
 		},
 		{
 			id: 2,
