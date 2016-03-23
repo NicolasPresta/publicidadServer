@@ -10,7 +10,8 @@ var dummy = { publicidades:
 			img: "http://cdn.arstechnica.net/wp-content/uploads/2012/09/steambigpic.png",
 			vigenciaDesde: "09/03/2016",
 			vigenciaHasta: "30/03/2016",
-			condiciones: "Condiciones: solo si tenes familia en la antartida, previa comprobacion del parentesco familiar aca voy a poner un texto absurdamente largo soo para verificar que se envie bien los datos y lueg los pueda leeer pq sino es una cagada, tengo que escribir mucho mucho para que aparesca mucho mucho texto en el celular y ver que pasa, si el scroll funciona o no.  Ojala que funcione, dios quiera que funcione, sino es una cagada.  espero que todo este texto sirva, sino voy a tener que vlver para  escribir mas :("
+			condiciones: "Condiciones: solo si tenes familia en la antartida, previa comprobacion del parentesco familiar aca voy a poner un texto absurdamente largo soo para verificar que se envie bien los datos y lueg los pueda leeer pq sino es una cagada, tengo que escribir mucho mucho para que aparesca mucho mucho texto en el celular y ver que pasa, si el scroll funciona o no.  Ojala que funcione, dios quiera que funcione, sino es una cagada.  espero que todo este texto sirva, sino voy a tener que vlver para  escribir mas :(",
+			urlCompartir: "http://www.nocpatagonia.com/publicidad/5-consejos-para-contratar-publicidad/"
 		},
 		{
 			id: 2,
@@ -19,7 +20,8 @@ var dummy = { publicidades:
 			img: "http://mueblerialaeconomia.net/img/productos/juego_de_living_lore.jpg",
 			vigenciaDesde: "01/03/2016",
 			vigenciaHasta: "15/03/2016",
-			condiciones: "Condiciones: no valido para el interior del pais. Stock de 4000 unidades."
+			condiciones: "Condiciones: no valido para el interior del pais. Stock de 4000 unidades.",
+			urlCompartir: "http://www.nocpatagonia.com/publicidad/5-consejos-para-contratar-publicidad/"
 		},
 		{
 			id: 3,
@@ -28,7 +30,8 @@ var dummy = { publicidades:
 			img: "http://www.ellashoy.com/images/pecas-en-la-cara.jpg",
 			vigenciaDesde: "01/03/2016",
 			vigenciaHasta: "12/04/2016",
-			condiciones: "Condiciones: Solo en efectivo. No incluye las pecas."
+			condiciones: "Condiciones: Solo en efectivo. No incluye las pecas.",
+			urlCompartir: "http://www.nocpatagonia.com/publicidad/5-consejos-para-contratar-publicidad/"
 		},
 		{
 			id: 4,
@@ -37,7 +40,8 @@ var dummy = { publicidades:
 			img: "http://img.mundoperros.es/wp-content/uploads/2012/02/perros1.jpeg",
 			vigenciaDesde: "01/03/2016",
 			vigenciaHasta: "29/05/2016",
-			condiciones: "Condiciones: no valido en el extrajero, solo previo deposito bancario. Consultar por tarjetas habilitadas"
+			condiciones: "Condiciones: no valido en el extrajero, solo previo deposito bancario. Consultar por tarjetas habilitadas",
+			urlCompartir: "http://www.nocpatagonia.com/publicidad/5-consejos-para-contratar-publicidad/"
 		},
 		{
 			id: 5,
@@ -46,7 +50,8 @@ var dummy = { publicidades:
 			img: "http://rossidisegno.com/objects/wp-content/uploads/2013/07/A_MesaRatonaBodega_E0000.jpg",
 			vigenciaDesde: "01/03/2016",
 			vigenciaHasta: "18/04/2016",
-			condiciones: "Condiciones: solo para jubilados y pensionados."
+			condiciones: "Condiciones: solo para jubilados y pensionados.",
+			urlCompartir: "http://www.nocpatagonia.com/publicidad/5-consejos-para-contratar-publicidad/"
 		},
 		{
 			id: 6,
@@ -55,7 +60,8 @@ var dummy = { publicidades:
 			img: "http://i2.wp.com/www.fabricastextiles.com.ar/wp-content/uploads/2014/04/fabrica-de-camperas-de-cuero.jpg",
 			vigenciaDesde: "01/03/2016",
 			vigenciaHasta: "30/06/2016",
-			condiciones: "Condiciones: para compras por internet de 22:03 a 22:05."
+			condiciones: "Condiciones: para compras por internet de 22:03 a 22:05.",
+			urlCompartir: "http://www.nocpatagonia.com/publicidad/5-consejos-para-contratar-publicidad/"
 		},
 		{
 			id: 7,
@@ -64,7 +70,8 @@ var dummy = { publicidades:
 			img: "http://www.opticapaesani.com.ar/media/catalog/product/cache/8/image/9df78eab33525d08d6e5fb8d27136e95/t/h/the_guardian_opaco.jpg",
 			vigenciaDesde: "01/03/2016",
 			vigenciaHasta: "19/03/2016",
-			condiciones: "Condiciones: No incluye costos de envios."
+			condiciones: "Condiciones: No incluye costos de envios.",
+			urlCompartir: "http://www.nocpatagonia.com/publicidad/5-consejos-para-contratar-publicidad/"
 		},
 		{
 			id: 8,
@@ -73,7 +80,8 @@ var dummy = { publicidades:
 			img: "http://static.imujer.com/sites/default/files/lasmanualidades/pizarra.jpg",
 			vigenciaDesde: "01/03/2016",
 			vigenciaHasta: "17/03/2016",
-			condiciones: "Condiciones: Las tizas se venden por separado por un valor de $80 la unidad. Compra minima 8 tizas."
+			condiciones: "Condiciones: Las tizas se venden por separado por un valor de $80 la unidad. Compra minima 8 tizas.",
+			urlCompartir: "http://www.nocpatagonia.com/publicidad/5-consejos-para-contratar-publicidad/"
 		}
 	]
 }

@@ -51,6 +51,26 @@ router.get('/publicidad/:uuid/:id', (req, res) => {
   // TODO: Mandar a grabar registro de la accion (uuid)
 });
 
+router.get('/ver/:id/', (req, res) => {
+
+  log.debug("nuevo request de /ver " + req)
+
+  let id = req.params.id
+
+  publicidadManager.getById(id, (err, publicidad) => {
+    if (err) {
+      return res.sendStatus(500).json(err)
+    }
+
+     //res.json(publicidad)
+
+    res.sendFile('/public/index.html', { root: __dirname + '/..'});
+
+  })
+
+  // TODO: Mandar a grabar registro de la accion (uuid)
+});
+
 router.post('/phoneData', (req, res) => {
  
   var uuid = req.body.uuid;
