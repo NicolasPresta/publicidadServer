@@ -1,8 +1,7 @@
 
-const LOG_LEVEL = "debug";
-
 var appConfig = {
-	log_level: LOG_LEVEL
+	log_level: "debug",
+	url_sitio: "http://104.131.38.51:80"
 };
 
 export default appConfig;

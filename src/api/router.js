@@ -2,6 +2,8 @@ import express from 'express'
 import publicidadManager from '../lib/publicidadManager'
 import Log from 'log'
 import appConfig from '../config/config'
+import publicidadTemplate from '../templates/publicidadTemplate'
+import mustache from 'mustache'
 
 const log = new Log(appConfig.LogLevel)
 const router = express.Router();
@@ -51,9 +53,9 @@ router.get('/publicidad/:uuid/:id', (req, res) => {
   // TODO: Mandar a grabar registro de la accion (uuid)
 });
 
-router.get('/ver/:id/', (req, res) => {
+router.get('/verpromo/:id/', (req, res) => {
 
-  log.debug("nuevo request de /ver " + req)
+  log.debug("nuevo request de /verpromo " + req)
 
   let id = req.params.id
 
@@ -62,10 +64,9 @@ router.get('/ver/:id/', (req, res) => {
       return res.sendStatus(500).json(err)
     }
 
-     //res.json(publicidad)
+    var html = mustache.to_html(publicidadTemplate, publicidad);
 
-    res.sendFile('/public/index.html', { root: __dirname + '/..'});
-
+    res.send(html)
   })
 
   // TODO: Mandar a grabar registro de la accion (uuid)
