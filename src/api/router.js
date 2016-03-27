@@ -115,5 +115,17 @@ router.post('/userData', (req, res) => {
   res.sendStatus(200);
 });
 
+router.post('/gpsData', (req, res) => {
+ 
+  var uuid = req.body.uuid;
+  var ubicaciones = JSON.stringify(req.body.Ubicaciones);
+
+
+ log.debug("nuevo request de /gpsData " + uuid + " - " + 
+                                        ubicaciones )
+
+  res.sendStatus(200);
+});
+
 
 export default router
