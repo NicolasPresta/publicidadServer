@@ -11,7 +11,7 @@ const router = express.Router();
 
 // Puntos de entrada REST
 
-// Envia todas las publicidades
+// Envia todas las publicidades en formato json
 router.get('/publicidades/:uuid', (req, res) => {
 	
   log.debug("nuevo request de /publicidades " + req)
@@ -32,6 +32,7 @@ router.get('/publicidades/:uuid', (req, res) => {
   // TODO: Mandar a grabar registro de la accion (uuid)
 });
 
+// Envia una publicidad en forma json
 router.get('/publicidad/:uuid/:id', (req, res) => {
 
   log.debug("nuevo request de /publicidad " + req)
@@ -53,6 +54,11 @@ router.get('/publicidad/:uuid/:id', (req, res) => {
   // TODO: Mandar a grabar registro de la accion (uuid)
 });
 
+// Para mostrar desde el explorador web una publicidad (html)
+// Esto se usa pues cuando se comparte una publicidad (por whatsapp, por facebook, por etc) lo que se comparte
+// Es un Link del tipo "http://www.micomercio.com/verpromo/51911"
+// Y ahí les muestra la promo. 
+// IDEM app de mercadolibre o de letgo o de alamaula o de olx o cualquier otra.
 router.get('/verpromo/:id/', (req, res) => {
 
   log.debug("nuevo request de /verpromo " + req)
@@ -64,6 +70,7 @@ router.get('/verpromo/:id/', (req, res) => {
       return res.sendStatus(500).json(err)
     }
 
+    // Mustache es basicamente un motor de plantillas html para node (para mas info de como funciona mustache buscar en google)
     var html = mustache.to_html(publicidadTemplate, publicidad);
 
     res.send(html)
@@ -72,6 +79,7 @@ router.get('/verpromo/:id/', (req, res) => {
   // TODO: Mandar a grabar registro de la accion (uuid)
 });
 
+// Recibe los datos de un dispositivo y los almacena
 router.post('/phoneData', (req, res) => {
  
   var uuid = req.body.uuid;
@@ -100,6 +108,7 @@ router.post('/phoneData', (req, res) => {
   res.sendStatus(200);
 });
 
+// Recibe los datos de un usuario de dispositivo y los almacena
 router.post('/userData', (req, res) => {
  
   var uuid = req.body.uuid;
@@ -115,6 +124,7 @@ router.post('/userData', (req, res) => {
   res.sendStatus(200);
 });
 
+// Recibe los datos de ubicaciones de un dispositivo y los almacena
 router.post('/gpsData', (req, res) => {
  
   var uuid = req.body.uuid;
