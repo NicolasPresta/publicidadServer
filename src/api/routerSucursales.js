@@ -11,6 +11,8 @@ import multer from 'multer'
 const log = new Log(appConfig.LogLevel)
 const router = express.Router();
 
+//Multer es una biblioteca para gestionar subidas de archivos, acá se define la ruta donde va a guardar los archivos
+//y el nombre con el que los va a guardar
 const storage = multer.diskStorage({
 	destination: function(req, file, cb){
 		console.log(req.params);
