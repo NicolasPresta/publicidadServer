@@ -38,7 +38,6 @@ db.once('open', () => {
 		next();
 	});
 
-
 	// Puntos de entrada REST
 	app.use('/user', routerUser);
 	app.use('/sucursales', routerSucursales);

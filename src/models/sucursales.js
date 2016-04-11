@@ -7,7 +7,11 @@ const sucursal = mongoose.Schema({
 	nombre: String,
 	descripcion: String,
 	direccion: String,
-	imagen: String,
+	imagen: {
+		ready: {type: Boolean, default: false},
+		contentType: String,
+		extension: String
+	},
 	ubicacion: {
 		latitud: Number,
 		longitud: Number

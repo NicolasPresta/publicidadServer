@@ -8,13 +8,12 @@
     "babelify": "^7.2.0",
     "body-parser": "^1.14.2",
     "express": "^4.13.3",
-    "formidable": "^1.0.17",
     "fs-extra": "^0.26.7",
+    "gm": "^1.22.0",
     "log": "^1.4.0",
     "mongoose": "^4.4.10",
     "multer": "^1.1.0",
-    "mustache": "^2.2.1",
-    "quickthumb": "0.0.12"
+    "mustache": "^2.2.1"
   },
   "devDependencies": {
     "babel-cli": "^6.2.0"

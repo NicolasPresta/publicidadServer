@@ -11,22 +11,48 @@ import multer from 'multer'
 const log = new Log(appConfig.LogLevel)
 const router = express.Router();
 
+import gm from 'gm'
+import path from 'path'
+
+const CONFIG_IMAGENES = {
+	PRE_PROCESS: './uploads/process/sucursales/',
+	READY: './uploads/ready/sucursales/',
+	SIZES: [{
+		DESC: 'small',
+		WIDTH: 320
+	}, {
+		DESC: 'medium',
+		WIDTH: 768
+	}, {
+		DESC: 'large',
+		WIDTH: 1080
+	}]
+};
+
 //Multer es una biblioteca para gestionar subidas de archivos, acá se define la ruta donde va a guardar los archivos
 //y el nombre con el que los va a guardar
 const storage = multer.diskStorage({
 	destination: function(req, file, cb){
-		console.log(req.params);
-		cb(null, './src/uploads/sucursales/')
+		cb(null, CONFIG_IMAGENES.PRE_PROCESS)
 	},
 	filename: function(req, file, cb){
-		console.log(req.params);
 		//var datetimestamp = Date.now();
-		cb(null, file.fieldname + '-' + req.params.id + '.' + file.originalname.split('.')[file.originalname.split('.').length-1])
+		cb(null, req.params.id + '.' + file.originalname.split('.')[file.originalname.split('.').length-1])
 	}
 });
 
+const fileFilter = function(req, file, cb) {
+	let type = file.mimetype;
+	if (type == 'image/jpeg' || type == 'image/png'){
+		cb(null, true);
+	} else {
+		cb(null, false);
+	}
+}
+
 const upload = multer({
-	storage: storage
+	storage: storage,
+	fileFilter: fileFilter
 }).single('sucursal');
 
 //get /sucursales/ - devuelve todas las sucursales
@@ -42,19 +68,35 @@ router.get('/', (req, res) => {
 
 })
 
+const processImage = function(idImagen, extension){
+	CONFIG_IMAGENES.SIZES.forEach((imagenSize) => {
+		gm(path.join(CONFIG_IMAGENES.PRE_PROCESS, idImagen + '.' + extension))
+			.resize(imagenSize.WIDTH)
+			.autoOrient()
+			.write(path.join(CONFIG_IMAGENES.READY, idImagen + '-' + imagenSize.DESC + '.' + extension), (err) => {
+				//TODO chequear manejo de errores por si falla la escritura de la imagen en el fileSystem
+				if (!err) {
+					console.log('hecho')
+				} else {
+					console.log(err)
+				}
+			})
+	})
+}
+
 //get /sucursales/imagen:id - recive id de sucursal, devuelve imagen de la sucursal
 router.get('/imagen/:id', (req, res) => {
 	//TODO devolver imagen con el tamaño requerido
 	let idSucursal = req.params.id;
-	//let tamaño = req.query.size;
+	let tamaño = req.query.size || 'large';
 	log.debug('Piden la imagen de la sucursal ' + idSucursal);
 	sucursalesManager.getImageById(idSucursal, (err, doc) => {
 		log.debug('la imagen es ' + doc);
 		if (err){
 			res.sendStatus(500).json(err)
-		} else {
-			fs.readFile(doc.imagen, (err, imagen) => {
-				res.set('Content-Type', 'image/jpeg');
+		} else if (doc.imagen){
+			fs.readFile(path.join(CONFIG_IMAGENES.READY, idSucursal + '-' + tamaño + '.' + doc.imagen.extension), (err, imagen) => {
+				res.set('Content-Type', doc.imagen.mimetype);
 				res.send(imagen);
 			})
 
@@ -66,16 +108,13 @@ router.get('/imagen/:id', (req, res) => {
 router.post('/nueva/imagen/:id', (req, res) => {
 	//TODO verificar que el archivo a subir sea una imagen
 	upload(req, res, function(err){
-		console.log(req.params);
-		console.log(req.headers);
-		console.log(req.body);
-		console.log(req.file);
-		console.log(req.files);
 		if (err){
 			res.json({error_code:1, err_desc:err});
 			return;
 		}
-		sucursalesManager.saveImage(req.params.id, req.file.path, (err, sucursal) => {
+		var imageExt = req.file.originalname.split('.')[req.file.originalname.split('.').length-1];
+		processImage(req.params.id, imageExt);
+		sucursalesManager.saveImage(req.params.id, req.file.mimetype, imageExt, (err, sucursal) => {
 			res.json({error_code:0, err_desc: null, data: sucursal});
 		})
 
@@ -97,6 +136,7 @@ router.post('/nueva', (req, res) => {
 	};
 	sucursalesManager.newSubsidiary(dataSucursal, (err, sucursal) => {
 		if (err){
+			console.log(err);
 			res.sendStatus(500).json(err)
 		} else {
 			res.json(sucursal);

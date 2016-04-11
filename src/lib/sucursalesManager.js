@@ -27,16 +27,19 @@ var sucursalesManager = {
 			nombre: dataSucursal.nombre,
 			descripcion: dataSucursal.descripcion,
 			direccion: dataSucursal.direccion,
+			imagen: {
+				ready: false,
+				contentType: ''
+			},
 			ubicacion: dataSucursal.ubicacion
 		})
 		nuevaSucursal.save(callback)
 	},
-	saveImage: function(id, rutaImagen, callback){
-		console.log('guardar imagen en el id: ' + id);
-		console.log('la ruta de la imagen es: ' + rutaImagen);
+	saveImage: function(id, mimeType, extension, callback){
 		sucursal.findById(id, 'imagen', (err, doc) => {
-			console.log('el documento encontrado es: ' + doc);
-			doc.imagen = rutaImagen;
+			doc.imagen.ready = true;
+			doc.imagen.contentType = mimeType;
+			doc.imagen.extension = extension;
 			doc.save(callback);
 		})
 	}
