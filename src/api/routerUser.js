@@ -4,9 +4,21 @@
 import express from 'express'
 import Log from 'log'
 import appConfig from '../config/config'
+import jwt from 'jsonwebtoken'
 
 const log = new Log(appConfig.LogLevel)
 const router = express.Router();
+
+//post /user/login - Inicio de sesion verifica usuario contra bd y genera token
+router.post('/login', (req, res) => {
+	//TODO validar usuario contra bd ?
+	if (req.body.name == appConfig.global_user.name && req.body.password == appConfig.global_user.password){
+		res.json(jwt.sign(req.body, appConfig.app_secret, {expiresIn: "1d"}));
+	} else {
+		res.sendStatus(403);
+	}
+
+});
 
 //post /user/phoneData - Recibe los datos de un dispositivo y los almacena
 router.post('/phoneData', (req, res) => {

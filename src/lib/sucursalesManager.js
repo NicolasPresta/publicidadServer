@@ -5,8 +5,6 @@
 //Conexión con la base de datos para cargar las sucursales y también recibir la información
 
 import sucursal from '../models/sucursales';
-import fs from 'fs';
-const RUTA_IMAGENES = 'C:\\img\\sucursales\\';
 
 var sucursalesManager = {
 
@@ -25,21 +23,23 @@ var sucursalesManager = {
 	newSubsidiary: function(dataSucursal, callback){
 		let nuevaSucursal = new sucursal({
 			nombre: dataSucursal.nombre,
-			descripcion: dataSucursal.descripcion,
 			direccion: dataSucursal.direccion,
-			imagen: {
-				ready: false,
-				contentType: ''
-			},
-			ubicacion: dataSucursal.ubicacion
+			ubicacion: dataSucursal.ubicacion,
+			localidad: dataSucursal.localidad,
+			provincia: dataSucursal.provincia,
+			pais: dataSucursal.pais,
+			telefonos: dataSucursal.telefonos,
+			horario: dataSucursal.horario,
+			radioEnvio: dataSucursal.radioEnvio
 		})
 		nuevaSucursal.save(callback)
 	},
-	saveImage: function(id, mimeType, extension, callback){
+	saveImage: function(id, mimeType, extension, aspectRatio, callback){
 		sucursal.findById(id, 'imagen', (err, doc) => {
 			doc.imagen.ready = true;
 			doc.imagen.contentType = mimeType;
 			doc.imagen.extension = extension;
+			doc.imagen.aspectRatio = aspectRatio;
 			doc.save(callback);
 		})
 	}

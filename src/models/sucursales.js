@@ -5,17 +5,26 @@ import mongoose from 'mongoose'
 
 const sucursal = mongoose.Schema({
 	nombre: String,
-	descripcion: String,
 	direccion: String,
-	imagen: {
-		ready: {type: Boolean, default: false},
-		contentType: String,
-		extension: String
-	},
 	ubicacion: {
 		latitud: Number,
 		longitud: Number
-	}
+	},
+	imagen: {
+		ready: {type: Boolean, default: false},
+		contentType: String,
+		extension: String,
+		aspectRatio: Number
+	},
+	localidad: String,
+	provincia: String,
+	pais: String,
+	telefonos: [String],
+	horario: {
+		desde: Number,
+		hasta: Number
+	},
+	radioEnvio: String
 });
 
 export default mongoose.model('sucursales', sucursal);

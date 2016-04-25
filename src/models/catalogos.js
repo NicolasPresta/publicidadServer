@@ -3,17 +3,20 @@
  */
 import mongoose from 'mongoose'
 
-const catalogo = mongoose.Schema({
+const producto = mongoose.Schema({
 	nombre: String,
-	description: String,
+	descripcion: String,
+	codigo: String,
 	precio: String,
 	sucursales: [String],
 	etiquetas: [String],
 	destacar: Number, //Destacado por prioridad
 	imagen: {
-		data: Buffer,
-		contentType: String
+		ready: {type: Boolean, default: false},
+		contentType: String,
+		extension: String,
+		aspectRatio: Number
 	}
 });
 
-export default mongoose.model('catalogo', catalogo);
+export default mongoose.model('producto', producto);

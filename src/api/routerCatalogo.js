@@ -1,8 +1,8 @@
 /**
- * Created by Artiom on 04/04/2016.
+ * Created by Artiom on 21/04/2016.
  */
 import express from 'express'
-import sucursalesManager from '../lib/sucursalesManager'
+import catalogoManager from '../lib/catalogoManager'
 import Log from 'log'
 import appConfig from '../config/config'
 import fs from 'fs-extra'
@@ -17,10 +17,9 @@ const log = new Log(appConfig.LogLevel)
 const router = express.Router();
 
 
-
 const CONFIG_IMAGENES = {
-	PRE_PROCESS: './uploads/process/sucursales/',
-	READY: './uploads/ready/sucursales/',
+	PRE_PROCESS: './uploads/process/productos/',
+	READY: './uploads/ready/productos/',
 	SIZES: [{
 		DESC: 'small',
 		WIDTH: 320
@@ -60,7 +59,7 @@ const filterImages = function(req, file, cb) {
 const upload = multer({
 	storage: storage,
 	fileFilter: filterImages
-}).single('sucursal');
+}).single('producto');
 
 //get /sucursales/ - devuelve todas las sucursales
 router.get('/', (req, res) => {
@@ -125,7 +124,7 @@ router.get('/imagen/:id', (req, res) => {
 	let idSucursal = req.params.id;
 	let tamaño = req.query.size || 'large';
 	log.debug('Piden la imagen de la sucursal ' + idSucursal);
-	sucursalesManager.getImageById(idSucursal, (err, doc) => {
+	catalogoManager.getImageById(idSucursal, (err, doc) => {
 		log.debug('la imagen es ' + doc);
 		if (err){
 			console.log('hola, tenemos un error ' + err);
@@ -152,7 +151,7 @@ router.post('/nueva/imagen/:id', (req, res) => {
 		let imageExt = req.file.originalname.split('.')[req.file.originalname.split('.').length-1];
 		processImage(req.params.id, imageExt, (err, results) => {
 			if (!err){
-				sucursalesManager.saveImage(req.params.id, req.file.mimetype, imageExt, (err, sucursal) => {
+				catalogoManager.saveImage(req.params.id, req.file.mimetype, imageExt, (err, sucursal) => {
 					res.json({error_code:0, err_desc: null, data: sucursal});
 				})
 			} else {
@@ -166,20 +165,22 @@ router.post('/nueva/imagen/:id', (req, res) => {
 //post /sucursales/nueva - recive todos los datos de la sucursal, guarda nueva sucursal en la bdd
 router.post('/nueva', (req, res) => {
 
-	let dataSucursal = {
+	let dataProducto = {
 		nombre: req.body.nombre,
-		direccion: req.body.direccion,
-		ubicacion: {
-			latitud: req.body.ubicacion.latitud,
-			longitud: req.body.ubicacion.longitud
-		}
+		descripcion: req.body.descripcion,
+		codigo: req.body.codigo,
+		precio: req.body.precio,
+		sucursales: req.body.sucursales,
+		etiquetas: req.body.etiquetas,
+		destacar: req.body.destacar
+
 	};
-	sucursalesManager.newSubsidiary(dataSucursal, (err, sucursal) => {
+	catalogoManager.newProduct(dataProducto, (err, producto) => {
 		if (err){
 			console.log(err);
 			res.sendStatus(500).json(err)
 		} else {
-			res.json(sucursal);
+			res.json(producto);
 		}
 	})
 
