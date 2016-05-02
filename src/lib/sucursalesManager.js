@@ -29,8 +29,8 @@ var sucursalesManager = {
 			provincia: dataSucursal.provincia,
 			pais: dataSucursal.pais,
 			telefonos: dataSucursal.telefonos,
-			horario: dataSucursal.horario,
-			radioEnvio: dataSucursal.radioEnvio
+			horario: dataSucursal.horario
+			//radioEnvio: dataSucursal.radioEnvio
 		})
 		nuevaSucursal.save(callback)
 	},

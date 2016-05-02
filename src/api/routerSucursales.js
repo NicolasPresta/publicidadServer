@@ -75,6 +75,13 @@ router.get('/', (req, res) => {
 
 })
 
+const getImageSize = function(idImagen, extension, callback){
+	gm(path.join(CONFIG_IMAGENES.PRE_PROCESS, idImagen + '.' + extension))
+		.size((err, size) => {
+			callback(size)
+		})
+}
+
 const saveProccesedImage = function(idImagen, extension, imagenSize, callback){
 	gm(path.join(CONFIG_IMAGENES.PRE_PROCESS, idImagen + '.' + extension))
 		.resize(imagenSize.WIDTH)
@@ -82,6 +89,7 @@ const saveProccesedImage = function(idImagen, extension, imagenSize, callback){
 		.write(path.join(CONFIG_IMAGENES.READY, idImagen + '-' + imagenSize.DESC + '.' + extension), (err) => {
 			//TODO chequear manejo de errores por si falla la escritura de la imagen en el fileSystem
 			if (!err) {
+				console.log('no hay error, llamamos al callback');
 				callback(null, imagenSize.DESC);
 			} else {
 				callback(err);
@@ -90,6 +98,7 @@ const saveProccesedImage = function(idImagen, extension, imagenSize, callback){
 }
 
 const processImage = function(idImagen, extension, mainCallback){
+	console.log('procesamos la imagen');
 	//Sincronizo el procesamiento de las 3 imágenes y sólo cuando las 3 se hayan guardado continúo y le respondo al usuario
 	async.parallel({
 		small: function(callback){
@@ -105,10 +114,13 @@ const processImage = function(idImagen, extension, mainCallback){
 			saveProccesedImage(idImagen, extension, imagenSize, callback)
 		}
 	}, function(err, results){
+		console.log('terminamos con las 3, creo...');
 		//Una vez procesadas las 3 imagenes, borro la original e informo al usuario
 		if (!err){
 			fs.unlink(path.join(CONFIG_IMAGENES.PRE_PROCESS, idImagen + '.' + extension), (err) => {
+				console.log('borramos la original');
 				if (!err){
+					console.log('no tenemos error, maincallback');
 					mainCallback(null, results)
 				} else {
 					mainCallback(err)
@@ -143,22 +155,26 @@ router.get('/imagen/:id', (req, res) => {
 //post /sucursales/nueva/imagen/:id - se sube la imagen de la sucursal
 router.post('/nueva/imagen/:id', (req, res) => {
 	upload(req, res, function(err){
-		console.log('aca estamos en el post')
-		console.log(err)
+		console.log(req.file);
 		if (err){
 			res.json({error_code:1, err_desc:err});
 			return;
 		}
 		let imageExt = req.file.originalname.split('.')[req.file.originalname.split('.').length-1];
-		processImage(req.params.id, imageExt, (err, results) => {
-			if (!err){
-				sucursalesManager.saveImage(req.params.id, req.file.mimetype, imageExt, (err, sucursal) => {
-					res.json({error_code:0, err_desc: null, data: sucursal});
-				})
-			} else {
-				res.json(err);
-			}
-		});
+		getImageSize(req.params.id, imageExt, (size) => {
+			var aspectRatio = size.width / size.height;
+			processImage(req.params.id, imageExt, (err, results) => {
+				if (!err){
+					console.log(aspectRatio);
+					sucursalesManager.saveImage(req.params.id, req.file.mimetype, imageExt, aspectRatio, (err, sucursal) => {
+						res.json({error_code:0, err_desc: null, data: sucursal});
+					})
+				} else {
+					res.json(err);
+				}
+			});
+		})
+
 	})
 
 });
@@ -166,12 +182,22 @@ router.post('/nueva/imagen/:id', (req, res) => {
 //post /sucursales/nueva - recive todos los datos de la sucursal, guarda nueva sucursal en la bdd
 router.post('/nueva', (req, res) => {
 
+	let horaDesde = new Date(req.body.horario.desde);
+	let horaHasta = new Date(req.body.horario.hasta);
+
 	let dataSucursal = {
 		nombre: req.body.nombre,
 		direccion: req.body.direccion,
 		ubicacion: {
 			latitud: req.body.ubicacion.latitud,
 			longitud: req.body.ubicacion.longitud
+		},
+		localidad: req.body.localidad,
+		provincia: req.body.provincia,
+		pais: req.body.pais,
+		horario: {
+			desde: horaDesde.getHours() * 60 + horaDesde.getMinutes(),
+			hasta: horaHasta.getHours() * 60 + horaHasta.getMinutes()
 		}
 	};
 	sucursalesManager.newSubsidiary(dataSucursal, (err, sucursal) => {
