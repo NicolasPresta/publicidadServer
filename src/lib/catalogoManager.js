@@ -33,6 +33,7 @@ var catalogoManager = {
 			doc.imagen.ready = true;
 			doc.imagen.contentType = mimeType;
 			doc.imagen.extension = extension;
+			doc.imagen.aspectRatio = aspectRatio;
 			doc.save(callback);
 		})
 	}

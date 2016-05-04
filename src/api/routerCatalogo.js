@@ -3,19 +3,16 @@
  */
 import express from 'express'
 import catalogoManager from '../lib/catalogoManager'
+import imagesManager from '../lib/imagesManager'
 import Log from 'log'
 import appConfig from '../config/config'
 import fs from 'fs-extra'
 import multer from 'multer'
 
-import gm from 'gm'
 import path from 'path'
-
-import async from 'async'
 
 const log = new Log(appConfig.LogLevel)
 const router = express.Router();
-
 
 const CONFIG_IMAGENES = {
 	PRE_PROCESS: './uploads/process/productos/',
@@ -61,10 +58,10 @@ const upload = multer({
 	fileFilter: filterImages
 }).single('producto');
 
-//get /sucursales/ - devuelve todas las sucursales
+//get /productos/ - devuelve todos los productos
 router.get('/', (req, res) => {
 
-	sucursalesManager.getAll((err, sucursales) => {
+	catalogoManager.getAll((err, sucursales) => {
 		if (err){
 			res.sendStatus(500).json(err)
 		} else {
@@ -74,63 +71,18 @@ router.get('/', (req, res) => {
 
 })
 
-const saveProccesedImage = function(idImagen, extension, imagenSize, callback){
-	gm(path.join(CONFIG_IMAGENES.PRE_PROCESS, idImagen + '.' + extension))
-		.resize(imagenSize.WIDTH)
-		.autoOrient()
-		.write(path.join(CONFIG_IMAGENES.READY, idImagen + '-' + imagenSize.DESC + '.' + extension), (err) => {
-			//TODO chequear manejo de errores por si falla la escritura de la imagen en el fileSystem
-			if (!err) {
-				callback(null, imagenSize.DESC);
-			} else {
-				callback(err);
-			}
-		})
-}
-
-const processImage = function(idImagen, extension, mainCallback){
-	//Sincronizo el procesamiento de las 3 imágenes y sólo cuando las 3 se hayan guardado continúo y le respondo al usuario
-	async.parallel({
-		small: function(callback){
-			let imagenSize = CONFIG_IMAGENES.SIZES[0]
-			saveProccesedImage(idImagen, extension, imagenSize, callback)
-		},
-		medium: function(callback){
-			let imagenSize = CONFIG_IMAGENES.SIZES[1]
-			saveProccesedImage(idImagen, extension, imagenSize, callback)
-		},
-		large: function(callback){
-			let imagenSize = CONFIG_IMAGENES.SIZES[2]
-			saveProccesedImage(idImagen, extension, imagenSize, callback)
-		}
-	}, function(err, results){
-		//Una vez procesadas las 3 imagenes, borro la original e informo al usuario
-		if (!err){
-			fs.unlink(path.join(CONFIG_IMAGENES.PRE_PROCESS, idImagen + '.' + extension), (err) => {
-				if (!err){
-					mainCallback(null, results)
-				} else {
-					mainCallback(err)
-				}
-			})
-		} else {
-			mainCallback(err)
-		}
-	})
-}
-
-//get /sucursales/imagen:id - recive id de sucursal, devuelve imagen de la sucursal
+//get /productos/imagen/:id - recive id de producto, devuelve imagen
 router.get('/imagen/:id', (req, res) => {
-	let idSucursal = req.params.id;
+	let idProducto = req.params.id;
 	let tamaño = req.query.size || 'large';
-	log.debug('Piden la imagen de la sucursal ' + idSucursal);
-	catalogoManager.getImageById(idSucursal, (err, doc) => {
+	log.debug('Piden la imagen del producto ' + idProducto);
+	catalogoManager.getImageById(idProducto, (err, doc) => {
 		log.debug('la imagen es ' + doc);
 		if (err){
 			console.log('hola, tenemos un error ' + err);
 			res.sendStatus(500).json(err)
 		} else if (doc.imagen){
-			fs.readFile(path.join(CONFIG_IMAGENES.READY, idSucursal + '-' + tamaño + '.' + doc.imagen.extension), (err, imagen) => {
+			fs.readFile(path.join(CONFIG_IMAGENES.READY, idProducto + '-' + tamaño + '.' + doc.imagen.extension), (err, imagen) => {
 				res.set('Content-Type', doc.imagen.mimetype);
 				res.send(imagen);
 			})
@@ -139,31 +91,33 @@ router.get('/imagen/:id', (req, res) => {
 	})
 })
 
-//post /sucursales/nueva/imagen/:id - se sube la imagen de la sucursal
+//post /productos/nueva/imagen/:id - se sube la imagen del producto
 router.post('/nueva/imagen/:id', (req, res) => {
 	upload(req, res, function(err){
-		console.log('aca estamos en el post')
-		console.log(err)
 		if (err){
 			res.json({error_code:1, err_desc:err});
 			return;
 		}
 		let imageExt = req.file.originalname.split('.')[req.file.originalname.split('.').length-1];
-		processImage(req.params.id, imageExt, (err, results) => {
-			if (!err){
-				catalogoManager.saveImage(req.params.id, req.file.mimetype, imageExt, (err, sucursal) => {
-					res.json({error_code:0, err_desc: null, data: sucursal});
-				})
-			} else {
-				res.json(err);
-			}
-		});
+		imagesManager.getImageSize(CONFIG_IMAGENES, req.params.id, imageExt, (size) => {
+			var aspectRatio = size.width / size.height;
+			imagesManager.processImage(CONFIG_IMAGENES, req.params.id, imageExt, (err, results) => {
+				if (!err){
+					catalogoManager.saveImage(req.params.id, req.file.mimetype, imageExt, aspectRatio, (err, producto) => {
+						res.json({error_code:0, err_desc: null, data: producto});
+					})
+				} else {
+					res.json(err);
+				}
+			})
+		})
+
 	})
 
 });
 
-//post /sucursales/nueva - recive todos los datos de la sucursal, guarda nueva sucursal en la bdd
-router.post('/nueva', (req, res) => {
+//post /producto/nuevo - recive todos los datos del producto, guarda nuevo producto en la bdd
+router.post('/nuevo', (req, res) => {
 
 	let dataProducto = {
 		nombre: req.body.nombre,
@@ -177,7 +131,6 @@ router.post('/nueva', (req, res) => {
 	};
 	catalogoManager.newProduct(dataProducto, (err, producto) => {
 		if (err){
-			console.log(err);
 			res.sendStatus(500).json(err)
 		} else {
 			res.json(producto);

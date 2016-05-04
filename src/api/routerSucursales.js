@@ -3,15 +3,13 @@
  */
 import express from 'express'
 import sucursalesManager from '../lib/sucursalesManager'
+import imagesManager from '../lib/imagesManager'
 import Log from 'log'
 import appConfig from '../config/config'
 import fs from 'fs-extra'
 import multer from 'multer'
 
-import gm from 'gm'
 import path from 'path'
-
-import async from 'async'
 
 const log = new Log(appConfig.LogLevel)
 const router = express.Router();
@@ -75,63 +73,6 @@ router.get('/', (req, res) => {
 
 })
 
-const getImageSize = function(idImagen, extension, callback){
-	gm(path.join(CONFIG_IMAGENES.PRE_PROCESS, idImagen + '.' + extension))
-		.size((err, size) => {
-			callback(size)
-		})
-}
-
-const saveProccesedImage = function(idImagen, extension, imagenSize, callback){
-	gm(path.join(CONFIG_IMAGENES.PRE_PROCESS, idImagen + '.' + extension))
-		.resize(imagenSize.WIDTH)
-		.autoOrient()
-		.write(path.join(CONFIG_IMAGENES.READY, idImagen + '-' + imagenSize.DESC + '.' + extension), (err) => {
-			//TODO chequear manejo de errores por si falla la escritura de la imagen en el fileSystem
-			if (!err) {
-				console.log('no hay error, llamamos al callback');
-				callback(null, imagenSize.DESC);
-			} else {
-				callback(err);
-			}
-		})
-}
-
-const processImage = function(idImagen, extension, mainCallback){
-	console.log('procesamos la imagen');
-	//Sincronizo el procesamiento de las 3 imágenes y sólo cuando las 3 se hayan guardado continúo y le respondo al usuario
-	async.parallel({
-		small: function(callback){
-			let imagenSize = CONFIG_IMAGENES.SIZES[0]
-			saveProccesedImage(idImagen, extension, imagenSize, callback)
-		},
-		medium: function(callback){
-			let imagenSize = CONFIG_IMAGENES.SIZES[1]
-			saveProccesedImage(idImagen, extension, imagenSize, callback)
-		},
-		large: function(callback){
-			let imagenSize = CONFIG_IMAGENES.SIZES[2]
-			saveProccesedImage(idImagen, extension, imagenSize, callback)
-		}
-	}, function(err, results){
-		console.log('terminamos con las 3, creo...');
-		//Una vez procesadas las 3 imagenes, borro la original e informo al usuario
-		if (!err){
-			fs.unlink(path.join(CONFIG_IMAGENES.PRE_PROCESS, idImagen + '.' + extension), (err) => {
-				console.log('borramos la original');
-				if (!err){
-					console.log('no tenemos error, maincallback');
-					mainCallback(null, results)
-				} else {
-					mainCallback(err)
-				}
-			})
-		} else {
-			mainCallback(err)
-		}
-	})
-}
-
 //get /sucursales/imagen:id - recive id de sucursal, devuelve imagen de la sucursal
 router.get('/imagen/:id', (req, res) => {
 	let idSucursal = req.params.id;
@@ -140,7 +81,6 @@ router.get('/imagen/:id', (req, res) => {
 	sucursalesManager.getImageById(idSucursal, (err, doc) => {
 		log.debug('la imagen es ' + doc);
 		if (err){
-			console.log('hola, tenemos un error ' + err);
 			res.sendStatus(500).json(err)
 		} else if (doc.imagen){
 			fs.readFile(path.join(CONFIG_IMAGENES.READY, idSucursal + '-' + tamaño + '.' + doc.imagen.extension), (err, imagen) => {
@@ -161,11 +101,10 @@ router.post('/nueva/imagen/:id', (req, res) => {
 			return;
 		}
 		let imageExt = req.file.originalname.split('.')[req.file.originalname.split('.').length-1];
-		getImageSize(req.params.id, imageExt, (size) => {
+		imagesManager.getImageSize(CONFIG_IMAGENES, req.params.id, imageExt, (size) => {
 			var aspectRatio = size.width / size.height;
-			processImage(req.params.id, imageExt, (err, results) => {
+			imagesManager.processImage(CONFIG_IMAGENES, req.params.id, imageExt, (err, results) => {
 				if (!err){
-					console.log(aspectRatio);
 					sucursalesManager.saveImage(req.params.id, req.file.mimetype, imageExt, aspectRatio, (err, sucursal) => {
 						res.json({error_code:0, err_desc: null, data: sucursal});
 					})
