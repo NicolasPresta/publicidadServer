@@ -77,6 +77,8 @@ router.get('/imagen/:id', (req, res) => {
 	let tamaño = req.query.size || 'large';
 	log.debug('Piden la imagen del producto ' + idProducto);
 	catalogoManager.getImageById(idProducto, (err, doc) => {
+		console.log(err);
+
 		log.debug('la imagen es ' + doc);
 		if (err){
 			console.log('hola, tenemos un error ' + err);

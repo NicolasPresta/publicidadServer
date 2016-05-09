@@ -19,7 +19,7 @@ const sucursal = mongoose.Schema({
 	localidad: String,
 	provincia: String,
 	pais: String,
-	telefonos: [String],
+	telefonos: [{numero: Number}],
 	horario: {
 		desde: Number,
 		hasta: Number

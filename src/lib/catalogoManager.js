@@ -12,6 +12,7 @@ var catalogoManager = {
 	},
 	//Devuelve la imagen por el id
 	getImageById: function(idProducto, callback){
+		console.log(idProducto);
 		producto.findById(idProducto, 'imagen', callback);
 	},
 	//Crear un nuevo producto

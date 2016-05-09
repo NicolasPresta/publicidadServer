@@ -62,8 +62,16 @@ const upload = multer({
 
 //get /sucursales/ - devuelve todas las sucursales
 router.get('/', (req, res) => {
-
-	sucursalesManager.getAll((err, sucursales) => {
+	let param = req.query;
+	Object.keys(param).forEach(function(key, index){
+		param[key] = {
+			$regex: param[key],
+			$options: 'i'
+		}
+	});
+	console.log(param);
+	sucursalesManager.getAll(param, (err, sucursales) => {
+		console.log(sucursales);
 		if (err){
 			res.sendStatus(500).json(err)
 		} else {

@@ -9,8 +9,8 @@ import sucursal from '../models/sucursales';
 var sucursalesManager = {
 
 	//devuelve todas las sucursales
-	getAll: function(callback){
-		sucursal.find({}, 'nombre descripcion direccion ubicacion', callback)
+	getAll: function(param, callback){
+		sucursal.find(param, 'nombre direccion ubicacion', callback)
 	},
 	//Devuelve la imagen de una sucursal por su id
 	getImageById: function(id, callback){

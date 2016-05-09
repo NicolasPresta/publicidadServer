@@ -27,7 +27,7 @@ db.once('open', () => {
 	log.info('Conexión exitosa con la base de datos');
 
 	// Middlewares
-	app.use(bodyParser.json({limit: '16mb'}));
+	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 		extended: true
 	}));
