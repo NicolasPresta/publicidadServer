@@ -73,7 +73,7 @@ router.get('/', (req, res) => {
 	sucursalesManager.getAll(param, (err, sucursales) => {
 		console.log(sucursales);
 		if (err){
-			res.sendStatus(500).json(err)
+			res.status(500).json(err)
 		} else {
 			res.json(sucursales)
 		}
@@ -89,7 +89,7 @@ router.get('/imagen/:id', (req, res) => {
 	sucursalesManager.getImageById(idSucursal, (err, doc) => {
 		log.debug('la imagen es ' + doc);
 		if (err){
-			res.sendStatus(500).json(err)
+			res.status(500).json(err)
 		} else if (doc.imagen){
 			fs.readFile(path.join(CONFIG_IMAGENES.READY, idSucursal + '-' + tamaño + '.' + doc.imagen.extension), (err, imagen) => {
 				res.set('Content-Type', doc.imagen.mimetype);
@@ -150,7 +150,7 @@ router.post('/nueva', (req, res) => {
 	sucursalesManager.newSubsidiary(dataSucursal, (err, sucursal) => {
 		if (err){
 			console.log(err);
-			res.sendStatus(500).json(err)
+			res.status(500).json(err)
 		} else {
 			res.json(sucursal);
 		}

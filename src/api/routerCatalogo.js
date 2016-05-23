@@ -60,10 +60,17 @@ const upload = multer({
 
 //get /productos/ - devuelve todos los productos
 router.get('/', (req, res) => {
-
-	catalogoManager.getAll((err, sucursales) => {
+	let param = req.query;
+	Object.keys(param).forEach(function(key, index){
+		param[key] = {
+			$regex: param[key],
+			$options: 'i'
+		}
+	});
+	console.log(param);
+	catalogoManager.getAll(param, (err, sucursales) => {
 		if (err){
-			res.sendStatus(500).json(err)
+			res.status(500).json(err)
 		} else {
 			res.json(sucursales)
 		}
@@ -82,7 +89,7 @@ router.get('/imagen/:id', (req, res) => {
 		log.debug('la imagen es ' + doc);
 		if (err){
 			console.log('hola, tenemos un error ' + err);
-			res.sendStatus(500).json(err)
+			res.status(500).json(err)
 		} else if (doc.imagen){
 			fs.readFile(path.join(CONFIG_IMAGENES.READY, idProducto + '-' + tamaño + '.' + doc.imagen.extension), (err, imagen) => {
 				res.set('Content-Type', doc.imagen.mimetype);
@@ -125,7 +132,10 @@ router.post('/nuevo', (req, res) => {
 		nombre: req.body.nombre,
 		descripcion: req.body.descripcion,
 		codigo: req.body.codigo,
-		precio: req.body.precio,
+		precio: {
+			valor: req.body.precio,
+			moneda: '$'
+		},
 		sucursales: req.body.sucursales,
 		etiquetas: req.body.etiquetas,
 		destacar: req.body.destacar
@@ -133,7 +143,7 @@ router.post('/nuevo', (req, res) => {
 	};
 	catalogoManager.newProduct(dataProducto, (err, producto) => {
 		if (err){
-			res.sendStatus(500).json(err)
+			res.status(500).json(err)
 		} else {
 			res.json(producto);
 		}

@@ -7,7 +7,10 @@ const producto = mongoose.Schema({
 	nombre: String,
 	descripcion: String,
 	codigo: String,
-	precio: String,
+	precio: {
+		valor: Number,
+		moneda: {type: String, default: '$'}
+	},
 	sucursales: [String],
 	etiquetas: [String],
 	destacar: Number, //Destacado por prioridad

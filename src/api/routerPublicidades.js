@@ -68,7 +68,7 @@ router.get('/verpromo/:id/', (req, res) => {
 
   publicidadManager.getById(id, (err, publicidad) => {
     if (err) {
-      return res.sendStatus(500).json(err)
+      return res.status(500).json(err)
     }
 
     // Mustache es basicamente un motor de plantillas html para node (para mas info de como funciona mustache buscar en google)

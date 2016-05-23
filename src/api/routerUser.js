@@ -15,7 +15,7 @@ router.post('/login', (req, res) => {
 	if (req.body.name == appConfig.global_user.name && req.body.password == appConfig.global_user.password){
 		res.json(jwt.sign(req.body, appConfig.app_secret, {expiresIn: "1d"}));
 	} else {
-		res.sendStatus(403);
+		res.status(403);
 	}
 
 });
@@ -46,7 +46,7 @@ router.post('/phoneData', (req, res) => {
 		MODEL + " - " +
 		SDK_INT)
 
-	res.sendStatus(200);
+	res.status(200);
 });
 
 //post /user/userData - Recibe los datos de un usuario de dispositivo y los almacena
@@ -62,7 +62,7 @@ router.post('/userData', (req, res) => {
 		FechaNacimiento + " - " +
 		Cuentas )
 
-	res.sendStatus(200);
+	res.status(200);
 });
 
 //post /user/gpsData - Recibe los datos de ubicaciones de un dispositivo y los almacena
@@ -75,7 +75,7 @@ router.post('/gpsData', (req, res) => {
 	log.debug("nuevo request de /gpsData " + uuid + " - " +
 		ubicaciones )
 
-	res.sendStatus(200);
+	res.status(200);
 });
 
 export default router

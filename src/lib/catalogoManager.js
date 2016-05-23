@@ -7,8 +7,8 @@ import producto from '../models/catalogos'
 var catalogoManager = {
 
 	//Devuelve el catalogo entero
-	getAll: function(callback){
-		producto.find({}, 'nombre descripcion codigo precio sucursales etiquetas destacar', callback);
+	getAll: function(param, callback){
+		producto.find(param, 'nombre descripcion codigo precio sucursales etiquetas destacar', callback);
 	},
 	//Devuelve la imagen por el id
 	getImageById: function(idProducto, callback){

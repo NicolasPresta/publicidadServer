@@ -25,15 +25,15 @@ var imagesManager = {
 		async.parallel({
 			small: function(callback){
 				let imagenSize = config.SIZES[0]
-				this.saveProccesedImage(config, idImagen, extension, imagenSize, callback)
+				imagesManager.saveProccesedImage(config, idImagen, extension, imagenSize, callback)
 			},
 			medium: function(callback){
 				let imagenSize = config.SIZES[1]
-				this.saveProccesedImage(config, idImagen, extension, imagenSize, callback)
+				imagesManager.saveProccesedImage(config, idImagen, extension, imagenSize, callback)
 			},
 			large: function(callback){
 				let imagenSize = config.SIZES[2]
-				this.saveProccesedImage(config, idImagen, extension, imagenSize, callback)
+				imagesManager.saveProccesedImage(config, idImagen, extension, imagenSize, callback)
 			}
 		}, function(err, results){
 			//Una vez procesadas las 3 imagenes, borro la original e informo al usuario
