@@ -7,6 +7,7 @@ import Log from 'log'
 import routerPublicidades from './api/routerPublicidades'
 import routerSucursales from './api/routerSucursales'
 import routerCatalogo from './api/routerCatalogo'
+import routerOfertas from './api/routerOferta'
 import routerUser from './api/routerUser'
 
 import appConfig from './config/config'
@@ -44,6 +45,7 @@ db.once('open', () => {
 	app.use('/sucursales', routerSucursales);
 	app.use('/publicidades', routerPublicidades);
 	app.use('/productos', routerCatalogo);
+	app.use('/ofertas', routerOfertas);
 
 	// Permite servir los archivos estaticos de la carpeta /public
 	app.use(express.static('public'))

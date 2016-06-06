@@ -10,7 +10,7 @@ var sucursalesManager = {
 
 	//devuelve todas las sucursales
 	getAll: function(param, callback){
-		sucursal.find(param, 'nombre direccion ubicacion', callback)
+		sucursal.find(param, 'nombre direccion ubicacion imagen localidad provincia pais telefonos horario', callback)
 	},
 	//Devuelve la imagen de una sucursal por su id
 	getImageById: function(id, callback){
@@ -18,7 +18,7 @@ var sucursalesManager = {
 	},
 	//Devuelve sucursal por su id
 	getById: function(id, callback){
-		sucursal.findById(id, 'nombre descripcion direccion ubicacion', callback)
+		sucursal.findById(id, 'nombre direccion ubicacion imagen localidad provincia pais telefonos horario', callback)
 	},
 	newSubsidiary: function(dataSucursal, callback){
 		let nuevaSucursal = new sucursal({
