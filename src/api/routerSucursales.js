@@ -126,27 +126,32 @@ router.post('/nueva/imagen/:id', (req, res) => {
 
 });
 
-//post /sucursales/nueva - recive todos los datos de la sucursal, guarda nueva sucursal en la bdd
-router.post('/nueva', (req, res) => {
+function prepararDatosSucursal(datos){
+	let horaDesde = new Date(datos.horario.desde);
+	let horaHasta = new Date(datos.horario.hasta);
 
-	let horaDesde = new Date(req.body.horario.desde);
-	let horaHasta = new Date(req.body.horario.hasta);
-
-	let dataSucursal = {
-		nombre: req.body.nombre,
-		direccion: req.body.direccion,
+	return {
+		nombre: datos.nombre,
+		direccion: datos.direccion,
 		ubicacion: {
-			latitud: req.body.ubicacion.latitud,
-			longitud: req.body.ubicacion.longitud
+			latitud: datos.ubicacion.latitud,
+			longitud: datos.ubicacion.longitud
 		},
-		localidad: req.body.localidad,
-		provincia: req.body.provincia,
-		pais: req.body.pais,
+		localidad: datos.localidad,
+		provincia: datos.provincia,
+		pais: datos.pais,
 		horario: {
 			desde: horaDesde.getHours() * 60 + horaDesde.getMinutes(),
 			hasta: horaHasta.getHours() * 60 + horaHasta.getMinutes()
 		}
 	};
+}
+
+//post /sucursales/nueva - recive todos los datos de la sucursal, guarda nueva sucursal en la bdd
+router.post('/nueva', (req, res) => {
+
+	let dataSucursal = prepararDatosSucursal(req.body);
+
 	sucursalesManager.newSubsidiary(dataSucursal, (err, sucursal) => {
 		if (err){
 			console.log(err);
@@ -156,6 +161,21 @@ router.post('/nueva', (req, res) => {
 		}
 	})
 
-})
+});
+
+//put /sucursales/guardar/:id - recive datos de sucursal en el body e id en la url, actualiza la sucursal del id con los del body
+router.put('/guardar/:id', (req, res) => {
+
+	let dataSucursal = prepararDatosSucursal(req.body);
+
+	sucursalesManager.updateSubsidiary(req.params.id, dataSucursal, (err, sucursal) => {
+		if (err){
+			console.log(err);
+			res.status(500).json(err)
+		} else {
+			res.json(sucursal);
+		}
+	})
+});
 
 export default router
