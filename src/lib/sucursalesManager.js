@@ -40,7 +40,16 @@ var sucursalesManager = {
 	updateSubsidiary: function(id, dataSucursal, callback){
 		this.getById(id, function(err, found){
 			if (!err){
-				found = dataSucursal;
+				found.nombre = dataSucursal.nombre;
+				found.direccion = dataSucursal.direccion;
+				found.ubicacion = dataSucursal.ubicacion;
+				found.localidad = dataSucursal.localidad;
+				found.provincia = dataSucursal.provincia;
+				found.pais = dataSucursal.pais;
+				found.telefonos = dataSucursal.telefonos;
+				found.horario = dataSucursal.horario;
+				//radioEnvio: dataSucursal.radioEnvio
+				console.log(found);
 				found.save(callback);
 			} else {
 				callback(err, null)

@@ -22,6 +22,20 @@ const log = new Log(appConfig.LogLevel)
 mongoose.connect('mongodb://localhost/test');
 const db = mongoose.connection;
 
+var allowCrossDomain = function(req, res, next) {
+	res.header('Access-Control-Allow-Origin', '*');
+	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+	res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
+	// intercept OPTIONS method
+	if ('OPTIONS' == req.method) {
+		res.send(200);
+	}
+	else {
+		next();
+	}
+};
+
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
 	//Solo iniciamos el servidor si la conexión con la base de datos fue exitosa
@@ -34,11 +48,7 @@ db.once('open', () => {
 	}));
 
 	// Configuración para permitir peticiones CORS (desde otros dominios)
-	app.use(function(req, res, next) {
-		res.header("Access-Control-Allow-Origin", "*");
-		res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-		next();
-	});
+	app.use(allowCrossDomain);
 
 	// Puntos de entrada REST
 	app.use('/user', routerUser);
